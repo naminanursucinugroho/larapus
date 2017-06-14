@@ -83,6 +83,5 @@
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>
-    @include('layouts.menu')
 </body>
 </html>

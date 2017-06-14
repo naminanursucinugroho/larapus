@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'Form' => [
+    'from' => [
         'address' => 'admin@larapus.com',
         'name' => 'Admin Larapus',
     ],
