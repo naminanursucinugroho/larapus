@@ -162,15 +162,14 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Laratrust\LaratrustServiceProvider::class,
-        Yajra\Datatables\DatatablesServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
-        Collective\Html\HtmlServiceProvider::class,
 
-        //
+        Collective\Html\HtmlServiceProvider::class,
+        Laratrust\LaratrustServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
 
         /*
          * Application Service Providers...
