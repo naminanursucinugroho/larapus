@@ -18,15 +18,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+Route::resource('/middle', 'middleController@index');
 
-Auth::routes();
+Route::group(['middleware'=> 'web'], function(){	
+	Route::group(['prefix'=>'admin','middleware'=>['auth','role:admin']],function(){
+	Route::resource('authors','AuthorsController');
 
-Route::get('/home', 'HomeController@index');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index');
-
-Route::group(['prefix'=>'admin', 'middleware'=>['auth']], function() {
-Route::resource('authors', 'AuthorsController');
+});
 });

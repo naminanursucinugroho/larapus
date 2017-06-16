@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Author;
+use Session;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 
@@ -14,14 +15,23 @@ class AuthorsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, Builder $htmlBuilder)
+    public function index(Request $request,Builder $htmlBuilder)
     {
-        if ($request->ajax){
-            $author::select(['id','name']);
-            return Datatables::of($authors)->make(true);
+        //
+        if ($request->ajax()) {
+            $authors = Author::select(['id','name']);
+            return Datatables::of($authors)
+            ->addColumn('action',function($author){
+                return view('datatable._action', ['edit_url'=>route('authors.edit',$author->id),
+                    ]);
+            })->make(true);
         }
-        $html = $htmlBuilder->addColumn(['data'=>'name','name'=>'name', 'title'=>'nama']);
-        return view('author.index')->with(compact('html'));
+
+        $html = $htmlBuilder
+        ->addColumn(['data'=>'name','name'=>'name','title'=>'Nama'])
+        ->addColumn(['data'=>'action','name'=>'action','title'=>'','orderable'=>false,'searchable'=>false]);
+
+        return view('authors.index')->with(compact('html'));
     }
 
     /**
@@ -32,6 +42,7 @@ class AuthorsController extends Controller
     public function create()
     {
         //
+        return view('authors.create');
     }
 
     /**
@@ -43,6 +54,10 @@ class AuthorsController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate($request,['name'=>'required|unique:authors']);
+        $authors=Author::create($request->all());
+        Session::flash("flash_notification",["level"=>"success","message"=>"Berhasil menyimpan $author->name"]);
+        return redirect()->route('authors.index');
     }
 
     /**
@@ -85,8 +100,8 @@ class AuthorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function destroy($id)
     {
-        return view('authors.index');
+        //
     }
 }
