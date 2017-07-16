@@ -7,6 +7,9 @@ use App\Role;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+Use Illuminate\Support\Facades\Session;
 
 class RegisterController extends Controller
 {
@@ -38,6 +41,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->middleware('user-should-verified');
     }
 
     /**
@@ -52,6 +56,7 @@ class RegisterController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'g-recaptcha-response' => 'required|captcha',
         ]);
     }
 
@@ -70,6 +75,33 @@ class RegisterController extends Controller
         ]);
         $memberRole = Role::where('name','member')->first();
         $user->attachRole($memberRole);
+        $user->sendVerification();
         return $user;
+    }
+
+    public function verify(Request $request,$token){
+        $email = $request->get('email');
+        $user = User::where('verification_token',$token)->where('email',$email)->first();
+        if ($user) {
+            $user->verify();
+            Session::flash("flash_notification", [
+                "level" => "success",
+                "message" => "Berhasil Melakukan Verifikasi."
+                ]);
+            Auth::login($user);
+        }
+        return redirect('/');
+
+    }
+    public function sendVerification(Request $request){
+        $user = User::where('email',$request->get('email'))->first();
+        if ($user && !$user->is_verified) {
+            $user->sendVerification();
+            Session::flash("flash_notification", [
+                "level"=>"succes",
+                "message"=>"Silahkan Klik pada Link aktivasi yang telah kami kirim."
+                ]);
+        }
+        return redirect('/login');
     }
 }

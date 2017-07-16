@@ -4,6 +4,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('table/css/jquery.dataTables.css') }}">
     <link rel="stylesheet" href="{{ asset('table/css/dataTables.bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/selectize.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.css') }}">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,7 +54,12 @@
                         @role('admin')
                             <li><a href="{{ route('authors.index') }}">Penulis</a></li>
                             <li><a href="{{ route('books.index') }}">Buku</a></li>
+                            <li><a href="{{ route('members.index') }}">Member</a></li>
+                            <li><a href="{{ route('statistics.index') }}">Peminjaman</a></li>
                         @endrole
+                        @if (auth()->check())
+                        <li><a href="{{ url('/settings/profile')}}">Profil</a></li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -78,6 +85,7 @@
                                         <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
+                                        <li><a href="{{ url('/settings/password') }}"><i class="fa fa-btn fa-lock"></i>Ubah Password</a></li>
                                     </li>
                                 </ul>
                             </li>
@@ -94,6 +102,7 @@
     <script src="/js/app.js"></script>
     <script src="{{ asset('table/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('table/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/selectize.min.js') }}"></script>
     <script src="/js/custom.js"></script>
     @yield('scripts')
 </body>
